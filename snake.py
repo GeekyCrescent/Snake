@@ -12,6 +12,7 @@ from random import randrange
 from turtle import *
 
 from freegames import square, vector
+import time
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
@@ -24,9 +25,9 @@ def change(x, y):
     aim.y = y
 
 
-def inside(head):
+def inside(point):
     """Return True if head inside boundaries."""
-    return -200 < head.x < 190 and -200 < head.y < 190
+    return -200 < point.x < 190 and -200 < point.y < 190
 
 
 def move():
@@ -48,6 +49,8 @@ def move():
     else:
         snake.pop(0)
 
+    move_food()
+
     clear()
 
     for body in snake:
@@ -56,6 +59,15 @@ def move():
     square(food.x, food.y, 9, 'green')
     update()
     ontimer(move, 100)
+
+def move_food():
+    """Move the food randomly within boundaries."""
+    directions = [vector(10, 0), vector(-10, 0), vector(0, 10), vector(0, -10)]
+    rand_direction = directions[randrange(4)]
+
+    new_food_pos = food + rand_direction
+    if inside(new_food_pos):
+        food.move(rand_direction)
 
 
 setup(420, 420, 370, 0)
@@ -66,5 +78,6 @@ onkey(lambda: change(10, 0), 'Right')
 onkey(lambda: change(-10, 0), 'Left')
 onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
+time.sleep(5)
 move()
 done()
